@@ -4,7 +4,7 @@
 #include <string.h>
 
 int main(int argc, char *argv[]) {
-	int limit = atoi(argv[2]), current = 0;
+	int limit = atoi(argv[2]), current = 9;
 	char id[25], name[25];
 	char opt;
 	bool keep = true;
@@ -23,3 +23,4 @@ int main(int argc, char *argv[]) {
 	fclose(f);
 	return 0;
 }
+
