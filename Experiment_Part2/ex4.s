@@ -21,15 +21,14 @@ main:
 @ ---------------------------------------
 @COMPLETE THE CODE IN ASSEMBLY FOR THE NEXT C STATEMENT
 @
-@x = ( a + b ) - c;
+@x = (a << 2)|(b & 15);
 	LDR r2,=a
 	LDR r2,[r2]
+	LSL r2, r2, #2
 	LDR r3,=b
 	LDR r3,[r3]
-	ADD r2,r2,r3
-	LDR r3,=c
-	LDR r3,[r3]
-	SUB r2,r2,r3
+	AND r3, r3, #15
+	ORR r2, r2, r3
 	LDR r3,=x
 	STR r2,[r3]
 @ ---------------------------------------

@@ -4,10 +4,10 @@
 		.data
 		.balign 4
 string:		.asciz "result is: %d\n"
-x:		.word 8 
+x:		.word 0 
 a:		.word 28
 b:		.word 60   
-c:		.word 9
+c:		.word 0
 
 @ ---------------------------------------
 @       Code Section
@@ -21,17 +21,17 @@ main:
 @ ---------------------------------------
 @COMPLETE THE CODE IN ASSEMBLY FOR THE NEXT C STATEMENT
 @
-@x = ( a + b ) - c;
-	LDR r2,=a
+@x = ( b + c ) * a;
+	LDR r2,=b
 	LDR r2,[r2]
-	LDR r3,=b
-	LDR r3,[r3]
-	ADD r2,r2,r3
 	LDR r3,=c
 	LDR r3,[r3]
-	SUB r2,r2,r3
+	ADD r2,r2,r3
+	LDR r3,=a
+	LDR r3,[r3]
+	MUL r4,r2,r3
 	LDR r3,=x
-	STR r2,[r3]
+	STR r4,[r3]
 @ ---------------------------------------
 	LDR r0,=string	@ get address of string into r0
 	LDR r1,=x
