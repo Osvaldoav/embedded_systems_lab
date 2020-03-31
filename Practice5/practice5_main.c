@@ -77,12 +77,12 @@ void GetDate(){
     // Move to position 0.
     const char point_to[] = {0x00};
     bcm2835_i2c_write(point_to, 1);   
-    bcm2835_i2c_read(buf, 7);  
+    bcm2835_i2c_read(buf, 7); 
 }
 
 void PrintDate() {
     char cSeconds, minutes, hours, day, date, month, year;
-    printf("%x/%x/%x %s %x:%x:%x", buf[4] & 0x3F, buf[5] & 0x1F, buf[6], days[(int)(buf[3] & 0x07) - 1], buf[2] & 0x1F, buf[1] & 0x7F, buf[0] & 0x7F);
+    printf("%02x/%02x/%02x %s %02x:%02x:%02x\n", buf[4] & 0x3F, buf[5] & 0x1F, buf[6], days[(int)(buf[3] & 0x07) - 1], buf[2] & 0x1F, buf[1] & 0x7F, buf[0] & 0x7F);
 }
 
 int main(int argc, char **argv) {
