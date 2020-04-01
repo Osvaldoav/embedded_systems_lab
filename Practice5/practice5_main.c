@@ -25,7 +25,7 @@ const char initialize_temp_buffer[8] = { 0x00, 0x00, 0x00, 0x52, 0x01, 0x01, 0x0
 
 const char *days[7] = {"Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun"};
 const char *ampm[2] = {"AM", "PM"};
-const char *records[4];
+const char *records[4] = {"", "", "", ""};
 uint8_t current_record = 1;
 
 const uint8_t clock_slave_address = 104; //0x68
