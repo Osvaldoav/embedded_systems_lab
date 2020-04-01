@@ -160,17 +160,19 @@ int main(int argc, char **argv) {
         int temp = CheckTemperature();
         char date[100];
         GetDate(date);
-        printf(">>> %s - Temperature: %dC°\n", date, temp);
+        //printf(">>> %s - Temperature: %dC°\n", date, temp);
         if(temp >= 35) {
             AddRecord(date);
             WriteToFile();
             PrintFile();
             begin = clock();
+            sleep(1);
         } else if((clock() - begin) / CLOCKS_PER_SEC > 10) {
             sprintf(*records, "Temperature: %dC°\n", temp);
+            WriteToFile();
             PrintFile();
+            begin = clock();
         }
-        sleep(1);
     }
     
     return 0;
