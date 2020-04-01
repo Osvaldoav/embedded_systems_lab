@@ -25,6 +25,8 @@ const char initialize_temp_buffer[8] = { 0x00, 0x00, 0x00, 0x52, 0x01, 0x01, 0x0
 
 const char *days[7] = {"Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun"};
 const char *ampm[2] = {"AM", "PM"};
+const char *records[4];
+uint8_t current_record = 1;
 
 const uint8_t clock_slave_address = 104; //0x68
 const uint8_t temp_slave_address = 77; //0x68
@@ -58,16 +60,16 @@ void InitializeClock() {
     printf("Initialize Result = %d\n", data);  
 }
 
-void GetDate(){
+char* GetDate() {
+    bcm2835_i2c_setSlaveAddress(clock_slave_address);
     // Move to position 0.
     const char point_to[] = {0x00};
     bcm2835_i2c_write(point_to, 1);   
     bcm2835_i2c_read(buf, 7); 
-}
-
-void PrintDate() {
+    
     char cDay, cMonth, cYear, cSeconds, cMinutes, cHours;
     int iWeekDay, iAmPm;
+    char *cDate;
     // Day is register zero with mask 0011 1111
     cDay = (buf[4] & 0x3F) % 0x32;
     // Month is register zero with mask 0001 1111
@@ -84,17 +86,18 @@ void PrintDate() {
     cSeconds = (buf[0] & 0x7F) % 0x61;
     // AM or PM
     iAmPm = (buf[2] & 0x20) >> 4;
-    printf("%02x/%02x/%02x %s %02x:%02x:%02x %s\n", cDay, cMonth, cYear, days[iWeekDay % 7], cHours, cMinutes, cSeconds, ampm[iAmPm % 2]);
+    sprintf(cDate, "%02x/%02x/%02x %s %02x:%02x:%02x %s\n", cDay, cMonth, cYear, days[iWeekDay % 7], cHours, cMinutes, cSeconds, ampm[iAmPm % 2]);
+    return cDate;
 }
 
 void ReadAndPrintClock() {
-    bcm2835_i2c_setSlaveAddress(clock_slave_address);
 
     GetDate();
     PrintDate();
 }
 
 void GetTemp() {
+    bcm2835_i2c_setSlaveAddress(temp_slave_address);
     // Move to position 0.
     const char point_to[] = {0x00};
     bcm2835_i2c_write(point_to, 1);   
@@ -102,24 +105,39 @@ void GetTemp() {
 }
 
 void PrintTemp() {
-    printf("%x\n", buf[0]);
+    printf("Temperature was: %x\n", buf[0]);
 }
 
 void ReadAndPrintTemp() {
-    bcm2835_i2c_setSlaveAddress(temp_slave_address);
 
     GetTemp();
     PrintTemp();
 }
 
-int main(int argc, char **argv) {
+int CheckTemperature() {
+    GetTemp();
+    return (int)buf[0];
+}
 
-    if(!InitializeBcm2835()) {
-        return 1;
+void WriteToFile() {
+    FILE *fp;
+
+    fp = fopen("temperatures.txt", "w+");
+    sprintf(records + current_record, "Record %d: %s", current_record, GetDate());
+    if (current_record > 3) {
+        records[1] = records[2];
+        records[1][7] = '1';
+        records[2] = records[3];
+        records[1][7] = '2';
+    } else {
+        ++current_record;
     }
 
-    InitializeClock();
+    for (int i = 0; i < 3; i++) {    
+        fprintf(fp, "%s", records[i]);
+    }
 
+    fclose(fp);
 }
 
 int main(int argc, char **argv) {
@@ -129,11 +147,17 @@ int main(int argc, char **argv) {
     }
 
     InitializeClock();
+    sprintf(records, "Temperature: %d°C", CheckTemperature());
+    WriteToFile()
 
     while(true) {
-        ReadAndPrintClock();
+        if(CheckTemperature() >= 35) {
+            WriteToFile();
+        }
         sleep(1);
     }
+    
+    fclose(fp);
     return 0;
 }
 
