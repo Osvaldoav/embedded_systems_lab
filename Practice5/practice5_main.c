@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <time.h>
 #include <unistd.h>
 
 typedef char bool;
@@ -134,6 +135,17 @@ void WriteToFile() {
     fclose(fp);
 }
 
+void PrintFile() {
+    FILE *fp;
+
+    fp = fopen("temperatures.txt", "r");
+
+    char line[100];
+    while( fgets(line, 100, fp) ) {
+        printf("%s\n", line);
+    }
+}
+
 int main(int argc, char **argv) {
 
     if(!InitializeBcm2835()) {
@@ -143,6 +155,7 @@ int main(int argc, char **argv) {
     InitializeClock();
     sprintf(*records, "Temperature: %dC°\n", CheckTemperature());
     WriteToFile();
+    clock_t begin = clock();
     while(true) {
         int temp = CheckTemperature();
         char date[100];
@@ -151,6 +164,11 @@ int main(int argc, char **argv) {
         if(temp >= 35) {
             AddRecord(date);
             WriteToFile();
+            PrintFile();
+            begin = clock();
+        } else if((clock() - begin) / CLOCKS_PER_SEC > 10) {
+            sprintf(*records, "Temperature: %dC°\n", temp);
+            PrintFile();
         }
         sleep(1);
     }
