@@ -5,7 +5,7 @@
 .data
 .balign 4	
 string: .asciz "\n%d + %d = %d\n"
-y:	.word	0
+y:	.int	0
 
 @ ---------------------------------------
 @	Code Section
