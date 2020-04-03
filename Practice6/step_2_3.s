@@ -7,7 +7,7 @@
 prompt_operand_1:	.asciz	"Give me the first operand:\n"
 prompt_operation:	.asciz	"Give me the operation to be performed (+, -, *, /):\n"
 prompt_operand_2:	.asciz	"Give me the second operand:\n"
-result_prompt:		.asciz	"The result of %d %c %d is: %d \n"
+result_prompt:		.asciz	"The result of %d %c %d is: \n"
 format_operand: 	.asciz 	"%d"
 format_operation: 	.asciz	"%c"
 
@@ -67,22 +67,14 @@ bl	scanf					@ respectively.
 
 @ ADD NUMBERS
 
+ldr r0, =result_prompt		@ print the result prompt
 ldr	r1, =a					@ get address of a into r1
 ldr	r1, [r1]				@ get a into r1
-ldr	r2, =b					@ get address of b into r2
-ldr	r2, [r2]				@ get b into r2
-
-
-@ PRINT NUMBERS
-
-ldr	r1, =a					@ print num formatted by output string.
-ldr	r1, [r1]
-ldr	r2, =b					@ print num formatted by output string.
-ldr	r2, [r2]
-ldr	r3, =res				@ print num formatted by output string.
-ldr	r3, [r3]
-ldr	r0, =result_prompt
-bl	printf
+ldr	r2, =oper				@ get address of oper into r2
+ldr	r2, [r2]				@ get oper into r2
+ldr	r3, =b					@ get address of b into r3
+ldr	r3, [r3]				@ get b into r3
+bl printf
 
 
 pop	{ip, pc}				@ pop return address into pc
