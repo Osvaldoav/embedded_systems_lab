@@ -15,7 +15,9 @@ y:	.word	0
 .global main
 .extern printf
 
-main:   
+main:
+push {ip, lr}	@ push return address + dummy register
+				@ for alignment
 LDR r2,=y
 LDR r1,=0xAAAAAAAA
 STR r1, [r2]
@@ -23,3 +25,4 @@ LDR r1,=0xBBBBBBBB
 STR r1, [r2], #4
 LDR r1,=0xCCCCCCCC
 STR r1, [r2, #-4]!
+pop {ip, lr}
