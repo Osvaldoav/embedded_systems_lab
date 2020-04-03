@@ -9,7 +9,7 @@ prompt_operation:	.asciz	"Give me the operation to be performed (+, -, *, /):\n"
 prompt_operand_2:	.asciz	"Give me the second operand:\n"
 result_prompt:		.asciz	"The result of %d %c %d is: \n"
 format_operand: 	.asciz 	"%d"
-format_operation: 	.asciz	"%c"
+format_operation: 	.asciz	" %c"
 
 a:		.word	0
 b:		.word	0
@@ -75,6 +75,11 @@ ldr	r2, [r2]				@ get oper into r2
 ldr	r3, =b					@ get address of b into r3
 ldr	r3, [r3]				@ get b into r3
 bl printf
+
+ldr r4, =suma
+ldr r4, [r4]
+cmp r2, r4
+bleq printf
 
 
 pop	{ip, pc}				@ pop return address into pc
