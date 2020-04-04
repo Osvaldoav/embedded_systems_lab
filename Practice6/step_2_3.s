@@ -7,7 +7,8 @@
 prompt_operand_1:	.asciz	"Give me the first operand:\n"
 prompt_operation:	.asciz	"Give me the operation to be performed (+, -, *, /):\n"
 prompt_operand_2:	.asciz	"Give me the second operand:\n"
-result_prompt:		.asciz	"The result of %d %c %d is: \n"
+result_prompt_1:	.asciz	"The result of %d %c %d is: "
+result_prompt_2:	.asciz	"%d\n"
 format_operand: 	.asciz 	"%d"
 format_operation: 	.asciz	" %c"
 
@@ -30,12 +31,39 @@ divi: 	.word   0x2F
 .extern scanf
 
 @ ---------------------------------------
-@ sumFunc: gets 2 ints in r1 and r2, adds
+@ sumFunc: gets 2 ints in r1 and r3, adds
 @ 	them up and saves the results in
-@	r0.	
+@	r5.	
 sumFunc:
 push {ip, lr}
-add	r0, r1, r2
+add	r5, r1, r3
+pop	{ip, pc}
+
+@ ---------------------------------------
+@ restaFunc: gets 2 ints in r1 and r3, substract
+@ 	them and saves the results in
+@	r5.	
+restaFunc:
+push {ip, lr}
+sub	r5, r1, r3
+pop	{ip, pc}
+
+@ ---------------------------------------
+@ mulFunc: gets 2 ints in r1 and r3, adds
+@ 	them up and saves the results in
+@	r5.	
+mulFunc:
+push {ip, lr}
+mul	r5, r1, r3
+pop	{ip, pc}
+
+@ ---------------------------------------
+@ divFunc: gets 2 ints in r1 and r3, adds
+@ 	them up and saves the results in
+@	r5.	
+divFunc:
+push {ip, lr}
+sdiv r5, r1, r3
 pop	{ip, pc}
 
 main:   
@@ -67,22 +95,40 @@ bl	scanf					@ respectively.
 
 @ ADD NUMBERS
 
-ldr r0, =result_prompt		@ print the result prompt
+ldr r0, =result_prompt_1	@ print the result prompt
 ldr	r1, =a					@ get address of a into r1
 ldr	r1, [r1]				@ get a into r1
 ldr	r2, =oper				@ get address of oper into r2
 ldr	r2, [r2]				@ get oper into r2
 ldr	r3, =b					@ get address of b into r3
 ldr	r3, [r3]				@ get b into r3
-ldr r4, =suma
-ldr r4, [r4]
-cmp r2, r4
-bleq printf
 
-@ldr r4, =suma
-@ldr r4, [r4]
-@cmp r2, r4
-@bleq printf
+ldr r4, =suma				@ get address of suma into r4
+ldr r4, [r4]				@ get suma into r4
+cmp r2, r4					@ compare r2 with r4
+bleq sumFunc				@ if equal, then jump to sumFunc.
+
+ldr r4, =resta				@ get address of resta into r4
+ldr r4, [r4]				@ get resta into r4
+cmp r2, r4					@ compare r2 with r4
+bleq restaFunc				@ if equal, then jump to restaFunc.
+
+ldr r4, =multi				@ get address of multi into r4
+ldr r4, [r4]				@ get multi into r4
+cmp r2, r4					@ compare r2 with r4
+bleq mulFunc				@ if equal, then jump to mulFunc.
+
+ldr r4, =divi				@ get address of divi into r4
+ldr r4, [r4]				@ get divi into r4
+cmp r2, r4					@ compare r2 with r4
+bleq divFunc				@ if equal, then jump to divFunc.
+
+bl printf					@ print the first part of the answer.
+
+ldr r0, =result_prompt_2	@ print the final result
+ldr r1, r5					@ load the result which is stored in r5
+
+bl printf					@ print the final answer.
 
 
 pop	{ip, pc}				@ pop return address into pc
