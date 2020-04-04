@@ -4,9 +4,9 @@
 	
 .data
 .balign 4	
-prompt_operand_1:	.asciz	"Give me the first operand:\n"
-prompt_operation:	.asciz	"Give me the operation to be performed (+, -, *, /):\n"
-prompt_operand_2:	.asciz	"Give me the second operand:\n"
+prompt_operand_1:	.asciz	"Give me the first operand: "
+prompt_operation:	.asciz	"Give me the operation to be performed (+, -, *, /): "
+prompt_operand_2:	.asciz	"Give me the second operand: "
 result_prompt_1:	.asciz	"The result of %d %c %d is: "
 result_prompt_2:	.asciz	"%d\n"
 format_operand: 	.asciz 	"%d"
@@ -126,7 +126,7 @@ bleq divFunc				@ if equal, then jump to divFunc.
 bl printf					@ print the first part of the answer.
 
 ldr r0, =result_prompt_2	@ print the final result
-ldr r1, r5					@ load the result which is stored in r5
+mov r1, r5					@ load the result which is stored in r5
 
 bl printf					@ print the final answer.
 
