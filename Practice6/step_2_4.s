@@ -209,11 +209,13 @@ ldr	r2, =oper_1				@ get address of oper_1 into r2
 ldr	r2, [r2]				@ get oper_1 into r2
 ldr	r3, =multi				@ get address of multi into r3
 ldr	r3, [r3]				@ get multi into r3
-cmp r2, r3
-ldr	r3, =divi				@ get address of divi into r3
-ldr	r3, [r3]				@ get divi into r3
-cmpne r2, r3
+cmp r2, #0x2A
+@ldr	r3, =divi				@ get address of divi into r3
+@ldr	r3, [r3]				@ get divi into r3
+cmpne r2, #0x2F
+mrs r0, cpsr
 bleq firstPairFirstFunc
+msr cpsr, r0
 blne secondPairFirstFunc
 
 
