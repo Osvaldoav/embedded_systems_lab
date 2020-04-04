@@ -15,10 +15,10 @@ a:		.word	0
 b:		.word	0
 oper:	.word	0
 res: 	.word 	0
-suma: 	.word  0x2A
-resta: 	.word 0x2D
-multi: 	.word 0x2A
-divi: 	.word 0x2F
+suma: 	.word   0x2B
+resta: 	.word   0x2D
+multi: 	.word   0x2A
+divi: 	.word   0x2F
 	
 @ ---------------------------------------
 @	Code Section
@@ -74,12 +74,15 @@ ldr	r2, =oper				@ get address of oper into r2
 ldr	r2, [r2]				@ get oper into r2
 ldr	r3, =b					@ get address of b into r3
 ldr	r3, [r3]				@ get b into r3
-bl printf
-
 ldr r4, =suma
 ldr r4, [r4]
 cmp r2, r4
 bleq printf
+
+@ldr r4, =suma
+@ldr r4, [r4]
+@cmp r2, r4
+@bleq printf
 
 
 pop	{ip, pc}				@ pop return address into pc
