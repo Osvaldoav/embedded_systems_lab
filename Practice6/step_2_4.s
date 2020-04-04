@@ -205,17 +205,14 @@ bl	scanf					@ respectively.
 
 @ If the first operand is equal to * or /, then we do that one first.
 @ else (meaning that the first operand is + or -) we do the second one first.
+
 ldr	r2, =oper_1				@ get address of oper_1 into r2
 ldr	r2, [r2]				@ get oper_1 into r2
-ldr	r3, =multi				@ get address of multi into r3
-ldr	r3, [r3]				@ get multi into r3
 cmp r2, #0x2A
-@ldr	r3, =divi				@ get address of divi into r3
-@ldr	r3, [r3]				@ get divi into r3
 cmpne r2, #0x2F
-mrs r0, cpsr
+mrs r0, cpsr                @ saves the flags on r0
 bleq firstPairFirstFunc
-msr cpsr, r0
+msr cpsr, r0                @ get back the flags so it works as else.
 blne secondPairFirstFunc
 
 
